@@ -8,3 +8,21 @@ type Wrapped777 @entity {
   "Underlying token symbol"
   underlyingSymbol: String!
 }
+
+type UniswapAdapter @entity {
+  "Adapter address"
+  id: ID!
+
+  outputWrapper: Wrapped777!
+  outputPoolWrapper: UniswapPoolWrapper
+}
+
+type UniswapPoolWrapper @entity {
+  "Wrapper address"
+  id: ID!
+
+  wrapper: Wrapped777!
+
+  token0Address: Bytes!
+  token1Address: Bytes!
+}
