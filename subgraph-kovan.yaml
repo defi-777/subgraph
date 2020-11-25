@@ -3,21 +3,24 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Contract
+    name: WrapperFactory
     network: kovan
     source:
-      address: "0xf8956Ce90B3f4C82127D34730a0d0d208bDCE1a2"
-      abi: Contract
+      address: "0xEDdb043500ac703E8b91B2CF8ddf3fd85E5F104e"
+      abi: WrapperFactory
+      startBlock: 22178356
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - WrapperCreated
+        - Wrapped777
       abis:
-        - name: Contract
-          file: ./abis/Contract.json
+        - name: WrapperFactory
+          file: ./abis/WrapperFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: WrapperCreated(address)
           handler: handleWrapperCreated
-      file: ./src/mapping.ts
+      file: ./src/wrapperFactory.ts

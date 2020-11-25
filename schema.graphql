@@ -1,5 +1,10 @@
-type ExampleEntity @entity {
+type Wrapped777 @entity {
+  "Wrapper address"
   id: ID!
-  count: BigInt!
-  token: Bytes! # address
+  "Underlying token address"
+  underlyingAddress: Bytes!
+  "Underlying token name"
+  underlyingName: String!
+  "Underlying token symbol"
+  underlyingSymbol: String!
 }

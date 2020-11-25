@@ -2,8 +2,8 @@
   "name": "kovan",
   "license": "UNLICENSED",
   "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
+    "codegen": "graph codegen subgraph-kovan.yaml",
+    "build": "graph build subgraph-kovan.yaml",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ defi-777/kovan",
     "create-local": "graph create --node http://localhost:8020/ defi-777/kovan",
     "remove-local": "graph remove --node http://localhost:8020/ defi-777/kovan",
