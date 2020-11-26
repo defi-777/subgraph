@@ -1,8 +1,21 @@
 import { Address } from "@graphprotocol/graph-ts"
+import { ERC20 } from "../generated/UniswapAdapterFactory/ERC20"
 import { IAdapterFactory, AdapterCreated } from "../generated/UniswapAdapterFactory/IAdapterFactory"
 import { IWrapped777 } from "../generated/UniswapAdapterFactory/IWrapped777"
 import { IUniswapV2Pair } from "../generated/UniswapAdapterFactory/IUniswapV2Pair"
 import { UniswapAdapter, UniswapPoolWrapper } from "../generated/schema"
+import { tryStringCall } from "./lib/string"
+
+export class Token {
+  name: String;
+  symbol: String;
+
+  constructor(address: Address) {
+    let contract = ERC20.bind(address)
+    this.name = tryStringCall(contract.try_name(), 'UNKNOWN')
+    this.symbol = tryStringCall(contract.try_symbol(), 'UNKNOWN')
+  }
+}
 
 function getPair(wrapperAddress: Address): IUniswapV2Pair {
   let wrapper = IWrapped777.bind(wrapperAddress)
@@ -36,7 +49,15 @@ export function handlePoolAdapterCreated(event: AdapterCreated): void {
 
     let pair = getPair(outputWrapper)
     poolWrapper.token0Address = pair.token0()
+    let token0 = new Token(poolWrapper.token0Address as Address)
+    poolWrapper.token0Name = token0.name
+    poolWrapper.token0Symbol = token0.symbol
+
     poolWrapper.token1Address = pair.token1()
+    let token1 = new Token(poolWrapper.token1Address as Address)
+    poolWrapper.token1Name = token1.name
+    poolWrapper.token1Symbol = token1.symbol
+
     poolWrapper.save()
   }
 

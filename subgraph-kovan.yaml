@@ -45,6 +45,8 @@ dataSources:
           file: ./abis/IUniswapV2Pair.json
         - name: IWrapped777
           file: ./abis/IWrapped777.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: AdapterCreated(address)
           handler: handleAdapterCreated
@@ -70,6 +72,8 @@ dataSources:
           file: ./abis/IUniswapV2Pair.json
         - name: IWrapped777
           file: ./abis/IWrapped777.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: AdapterCreated(address)
           handler: handlePoolAdapterCreated

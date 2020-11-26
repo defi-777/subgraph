@@ -24,5 +24,9 @@ type UniswapPoolWrapper @entity {
   wrapper: Wrapped777!
 
   token0Address: Bytes!
+  token0Name: String!
+  token0Symbol: String!
   token1Address: Bytes!
+  token1Name: String!
+  token1Symbol: String!
 }
