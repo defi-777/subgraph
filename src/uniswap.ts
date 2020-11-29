@@ -1,10 +1,11 @@
 import { Address } from "@graphprotocol/graph-ts"
 import { ERC20 } from "../generated/UniswapAdapterFactory/ERC20"
+import { ERC20bytes32 } from "../generated/WrapperFactory/ERC20bytes32"
 import { IAdapterFactory, AdapterCreated } from "../generated/UniswapAdapterFactory/IAdapterFactory"
 import { IWrapped777 } from "../generated/UniswapAdapterFactory/IWrapped777"
 import { IUniswapV2Pair } from "../generated/UniswapAdapterFactory/IUniswapV2Pair"
 import { UniswapAdapter, UniswapPoolWrapper } from "../generated/schema"
-import { tryStringCall } from "./lib/string"
+import { tryStringCall, tryBytesStringCall } from "./lib/string"
 
 export class Token {
   name: String;
@@ -14,6 +15,12 @@ export class Token {
     let contract = ERC20.bind(address)
     this.name = tryStringCall(contract.try_name(), 'UNKNOWN')
     this.symbol = tryStringCall(contract.try_symbol(), 'UNKNOWN')
+
+    if (this.symbol === 'UNKNOWN') {
+      let b32contract = ERC20bytes32.bind(address)
+      this.name = tryBytesStringCall(b32contract.try_name(), 'UNKNOWN')
+      this.symbol = tryBytesStringCall(b32contract.try_symbol(), 'UNKNOWN')
+    }
   }
 }
 
