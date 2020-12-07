@@ -3,24 +3,7 @@ import { WrapperFactory, WrapperCreated } from "../generated/WrapperFactory/Wrap
 import { ERC20 } from "../generated/WrapperFactory/ERC20"
 import { ERC20bytes32 } from "../generated/WrapperFactory/ERC20bytes32"
 import { Wrapped777 } from "../generated/schema"
-import { tryStringCall, tryBytesStringCall } from "./lib/string"
-
-export class Token {
-  name: String;
-  symbol: String;
-
-  constructor(address: Address) {
-    let contract = ERC20.bind(address)
-    this.name = tryStringCall(contract.try_name(), 'UNKNOWN')
-    this.symbol = tryStringCall(contract.try_symbol(), 'UNKNOWN')
-
-    if (this.symbol === 'UNKNOWN') {
-      let b32contract = ERC20bytes32.bind(address)
-      this.name = tryBytesStringCall(b32contract.try_name(), 'UNKNOWN')
-      this.symbol = tryBytesStringCall(b32contract.try_symbol(), 'UNKNOWN')
-    }
-  }
-}
+import { Token } from "./lib/string"
 
 export function handleWrapperCreated(event: WrapperCreated): void {
   let factory = WrapperFactory.bind(event.address)

@@ -7,26 +7,18 @@ type Wrapped777 @entity {
   underlyingName: String!
   "Underlying token symbol"
   underlyingSymbol: String!
+
+  protocol: String
+
+  poolTokenAddresses: [Bytes!]
+  poolTokenNames: [String!]
+  poolTokenSymbols: [String!]
 }
 
-type UniswapAdapter @entity {
+type Adapter @entity {
   "Adapter address"
   id: ID!
+  protocol: String!
 
   outputWrapper: Wrapped777!
-  outputPoolWrapper: UniswapPoolWrapper
-}
-
-type UniswapPoolWrapper @entity {
-  "Wrapper address"
-  id: ID!
-
-  wrapper: Wrapped777!
-
-  token0Address: Bytes!
-  token0Name: String!
-  token0Symbol: String!
-  token1Address: Bytes!
-  token1Name: String!
-  token1Symbol: String!
 }

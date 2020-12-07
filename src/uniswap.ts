@@ -4,25 +4,8 @@ import { ERC20bytes32 } from "../generated/WrapperFactory/ERC20bytes32"
 import { IAdapterFactory, AdapterCreated } from "../generated/UniswapAdapterFactory/IAdapterFactory"
 import { IWrapped777 } from "../generated/UniswapAdapterFactory/IWrapped777"
 import { IUniswapV2Pair } from "../generated/UniswapAdapterFactory/IUniswapV2Pair"
-import { UniswapAdapter, UniswapPoolWrapper } from "../generated/schema"
-import { tryStringCall, tryBytesStringCall } from "./lib/string"
-
-export class Token {
-  name: String;
-  symbol: String;
-
-  constructor(address: Address) {
-    let contract = ERC20.bind(address)
-    this.name = tryStringCall(contract.try_name(), 'UNKNOWN')
-    this.symbol = tryStringCall(contract.try_symbol(), 'UNKNOWN')
-
-    if (this.symbol === 'UNKNOWN') {
-      let b32contract = ERC20bytes32.bind(address)
-      this.name = tryBytesStringCall(b32contract.try_name(), 'UNKNOWN')
-      this.symbol = tryBytesStringCall(b32contract.try_symbol(), 'UNKNOWN')
-    }
-  }
-}
+import { Adapter, Wrapped777 } from "../generated/schema"
+import { Token } from "./lib/string"
 
 function getPair(wrapperAddress: Address): IUniswapV2Pair {
   let wrapper = IWrapped777.bind(wrapperAddress)
@@ -37,7 +20,8 @@ export function handleAdapterCreated(event: AdapterCreated): void {
   let adapterAddress = factory.calculateAdapterAddress(event.params.outputWrapper)
   let outputWrapper = event.params.outputWrapper
 
-  let adapter = new UniswapAdapter(adapterAddress.toHex())
+  let adapter = new Adapter(adapterAddress.toHex())
+  adapter.protocol = 'Uniswap'
   adapter.outputWrapper = event.params.outputWrapper.toHex()
 
   adapter.save()
@@ -49,28 +33,22 @@ export function handlePoolAdapterCreated(event: AdapterCreated): void {
   let adapterAddress = factory.calculateAdapterAddress(event.params.outputWrapper)
   let outputWrapper = event.params.outputWrapper
 
-  let poolWrapper = UniswapPoolWrapper.load(outputWrapper.toHex())
-  if (!poolWrapper) {
-    poolWrapper = new UniswapPoolWrapper(outputWrapper.toHex())
-    poolWrapper.wrapper = outputWrapper.toHex()
+  let poolWrapper = new Wrapped777(outputWrapper.toHex())
+  poolWrapper.protocol = 'Uniswap'
 
-    let pair = getPair(outputWrapper)
-    poolWrapper.token0Address = pair.token0()
-    let token0 = new Token(poolWrapper.token0Address as Address)
-    poolWrapper.token0Name = token0.name
-    poolWrapper.token0Symbol = token0.symbol
+  let pair = getPair(outputWrapper)
+  let token0 = new Token(pair.token0() as Address)
+  let token1 = new Token(pair.token1() as Address)
 
-    poolWrapper.token1Address = pair.token1()
-    let token1 = new Token(poolWrapper.token1Address as Address)
-    poolWrapper.token1Name = token1.name
-    poolWrapper.token1Symbol = token1.symbol
+  poolWrapper.poolTokenAddresses = [token0.address, token1.address]
+  poolWrapper.poolTokenNames = [token0.name, token1.name]
+  poolWrapper.poolTokenSymbols = [token0.symbol, token1.symbol]
 
-    poolWrapper.save()
-  }
+  poolWrapper.save()
 
-  let adapter = new UniswapAdapter(adapterAddress.toHex())
+  let adapter = new Adapter(adapterAddress.toHex())
   adapter.outputWrapper = event.params.outputWrapper.toHex()
-  adapter.outputPoolWrapper = event.params.outputWrapper.toHex()
+  adapter.protocol = 'Uniswap'
 
   adapter.save()
 }

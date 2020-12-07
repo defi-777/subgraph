@@ -38,8 +38,8 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - UniswapAdapter
-        - UniswapPoolWrapper
+        - Wrapped777
+        - Adapters
       abis:
         - name: IAdapterFactory
           file: ./abis/IAdapterFactory.json
@@ -67,8 +67,8 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - UniswapAdapter
-        - UniswapPoolWrapper
+        - Wrapped777
+        - Adapters
       abis:
         - name: IAdapterFactory
           file: ./abis/IAdapterFactory.json
