@@ -6,9 +6,9 @@ dataSources:
     name: WrapperFactory
     network: kovan
     source:
-      address: "0xEDdb043500ac703E8b91B2CF8ddf3fd85E5F104e"
+      address: "0x436608C0f7FC4cb11E4458DeA9Dd7B8e98C87767"
       abi: WrapperFactory
-      startBlock: 22178356
+      startBlock: 22453690
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -26,6 +26,32 @@ dataSources:
         - event: WrapperCreated(address)
           handler: handleWrapperCreated
       file: ./src/wrapperFactory.ts
+  - kind: ethereum/contract
+    name: FarmerTokenFactory
+    network: kovan
+    source:
+      address: "0x1492053b119CfC07bF2fAC97C6b0b0843DCfaaE2"
+      abi: FarmerTokenFactory
+      startBlock: 22453688
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+      abis:
+        - name: FarmerTokenFactory
+          file: ./abis/FarmerTokenFactory.json
+        - name: IFarmerToken
+          file: ./abis/IFarmerToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: WrapperCreated(indexed address,address)
+          handler: handleWrapperCreated
+      file: ./src/FarmerTokenFactory.ts
   - kind: ethereum/contract
     name: UniswapAdapterFactory
     network: kovan
