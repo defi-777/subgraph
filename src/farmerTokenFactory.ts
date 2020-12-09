@@ -12,6 +12,8 @@ export function handleWrapperCreated(event: WrapperCreated): void {
   let token = new Token(event.params.token)
   wrapper.underlyingName = token.name
   wrapper.underlyingSymbol = token.symbol
+  wrapper.underlyingDecimals = token.decimals
+
   let yieldWrappers = IFarmerToken.bind(event.params.wrapper).rewardWrappers()
   let yieldWrapperIDs = new Array<string>(yieldWrappers.length)
   for (let i = 0, k = yieldWrappers.length; i < k; ++i) {

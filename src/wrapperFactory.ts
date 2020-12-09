@@ -16,6 +16,7 @@ export function handleWrapperCreated(event: WrapperCreated): void {
   let token = new Token(event.params.token)
   wrapper.underlyingName = token.name
   wrapper.underlyingSymbol = token.symbol
+  wrapper.underlyingDecimals = token.decimals
 
   wrapper.save()
 }

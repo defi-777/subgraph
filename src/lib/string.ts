@@ -20,12 +20,14 @@ export class Token {
   address: Address
   name: String
   symbol: String
+  decimals: i32
 
   constructor(address: Address) {
     let contract = ERC20.bind(address)
     this.address = address
     this.name = tryStringCall(contract.try_name(), 'UNKNOWN')
     this.symbol = tryStringCall(contract.try_symbol(), 'UNKNOWN')
+    this.decimals = contract.decimals()
 
     if (this.symbol === 'UNKNOWN') {
       let b32contract = ERC20bytes32.bind(address)
