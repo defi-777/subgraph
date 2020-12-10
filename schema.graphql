@@ -12,6 +12,7 @@ type Wrapped777 @entity {
   protocol: String
 
   yieldWrappers: [Wrapped777!]
+  yieldAdapters: [Bytes!]
 
   poolTokenAddresses: [Bytes!]
   poolTokenNames: [String!]

@@ -1,4 +1,4 @@
-import { Address } from "@graphprotocol/graph-ts"
+import { Address, Bytes } from "@graphprotocol/graph-ts"
 import { WrapperCreated } from "../generated/FarmerTokenFactory/FarmerTokenFactory"
 import { IFarmerToken } from "../generated/FarmerTokenFactory/IFarmerToken"
 import { Wrapped777 } from "../generated/schema"
@@ -14,12 +14,17 @@ export function handleWrapperCreated(event: WrapperCreated): void {
   wrapper.underlyingSymbol = token.symbol
   wrapper.underlyingDecimals = token.decimals
 
-  let yieldWrappers = IFarmerToken.bind(event.params.wrapper).rewardWrappers()
-  let yieldWrapperIDs = new Array<string>(yieldWrappers.length)
+  let farmerToken = IFarmerToken.bind(event.params.wrapper)
+  let yieldWrappers = farmerToken.rewardWrappers()
+  let yieldWrapperAddresses = new Array<string>(yieldWrappers.length)
+  let yieldAdapterAddresses = new Array<Bytes>(yieldWrappers.length)
+
   for (let i = 0, k = yieldWrappers.length; i < k; ++i) {
-    yieldWrapperIDs[i] = yieldWrappers[i].toHex()
+    yieldWrapperAddresses[i] = yieldWrappers[i].toHex()
+    yieldAdapterAddresses[i] = farmerToken.getRewardAdapter(yieldWrappers[i])
   }
-  wrapper.yieldWrappers = yieldWrapperIDs
+  wrapper.yieldWrappers = yieldWrapperAddresses
+  wrapper.yieldAdapters = yieldAdapterAddresses
 
   wrapper.save()
 }
