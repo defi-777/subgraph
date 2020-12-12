@@ -20,7 +20,7 @@ export function handleCompoundMappingSet(event: MappingSet): void {
   let supportedWrappers = adapter.supportedWrappers
 
   if (event.params.input != COMPOUND_ETH) {
-    supportedWrappers.push(event.params.output.toHex())
+    supportedWrappers.push(event.params.input.toHex())
   }
   supportedWrappers.push(event.params.output.toHex())
 
