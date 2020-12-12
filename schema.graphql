@@ -24,5 +24,7 @@ type Adapter @entity {
   id: ID!
   protocol: String!
 
-  outputWrapper: Wrapped777!
+  outputWrapper: Wrapped777
+
+  supportedWrappers: [Wrapped777!]
 }

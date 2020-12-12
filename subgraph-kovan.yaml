@@ -56,7 +56,7 @@ dataSources:
     name: UniswapAdapterFactory
     network: kovan
     source:
-      address: "0x28cf6535169919FC114be398b40835603809b912"
+      address: "0x8CD1a9Be80cB1827458AF6bB9ca5B0dAAAE36C1f"
       abi: IAdapterFactory
       startBlock: 22453688
     mapping:
@@ -85,7 +85,7 @@ dataSources:
     name: UniswapPoolAdapterFactory
     network: kovan
     source:
-      address: "0xB5940209403B4d67D56DB66D1338390FE827eE06"
+      address: "0xFF5EDd692Ba2E2EDF96321De28f6802529c9b527"
       abi: IAdapterFactory
       startBlock: 22453688
     mapping:
@@ -168,3 +168,23 @@ dataSources:
         - event: AdapterCreated(address)
           handler: handleExitAdapterCreated
       file: ./src/balancer.ts
+  - kind: ethereum/contract
+    name: CompoundAdapter
+    network: kovan
+    source:
+      address: "0x4BD509159Dd731808E5CfEa53849e1ff43bC3745"
+      abi: CompoundAdapter
+      startBlock: 22556066
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Adapters
+      abis:
+        - name: CompoundAdapter
+          file: ./abis/CompoundAdapter.json
+      eventHandlers:
+        - event: MappingSet(address,address)
+          handler: handleCompoundMappingSet
+      file: ./src/singletonAdapters.ts
