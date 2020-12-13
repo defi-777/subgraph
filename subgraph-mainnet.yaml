@@ -188,3 +188,23 @@ dataSources:
         - event: MappingSet(address,address)
           handler: handleCompoundMappingSet
       file: ./src/singletonAdapters.ts
+  - kind: ethereum/contract
+    name: yVaultAdapter
+    network: mainnet
+    source:
+      address: "0x4Aede952226B543FFc8385355E6adc47C9b27542"
+      abi: CompoundAdapter
+      startBlock: 11439843
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Adapters
+      abis:
+        - name: CompoundAdapter
+          file: ./abis/CompoundAdapter.json
+      eventHandlers:
+        - event: MappingSet(address,address)
+          handler: handleYVaultMappingSet
+      file: ./src/singletonAdapters.ts
