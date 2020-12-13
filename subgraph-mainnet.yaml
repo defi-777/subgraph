@@ -192,7 +192,7 @@ dataSources:
     name: yVaultAdapter
     network: mainnet
     source:
-      address: "0x4Aede952226B543FFc8385355E6adc47C9b27542"
+      address: "0x4BC99E9F6f03604FEE0a83A5d4B7f17f084F4356"
       abi: CompoundAdapter
       startBlock: 11439843
     mapping:
