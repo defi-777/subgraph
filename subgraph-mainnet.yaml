@@ -208,3 +208,52 @@ dataSources:
         - event: MappingSet(address,address)
           handler: handleYVaultMappingSet
       file: ./src/singletonAdapters.ts
+  - kind: ethereum/contract
+    name: CRVFarmerTokenFactory
+    network: mainnet
+    source:
+      address: "0xf0564e99b3527F16AE88F331Bb97AB6491DbBcCC"
+      abi: CRVFarmerTokenFactory
+      startBlock: 11439843
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Adapters
+      abis:
+        - name: CRVFarmerTokenFactory
+          file: ./abis/CRVFarmerTokenFactory.json
+        - name: IFarmerToken
+          file: ./abis/IFarmerToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: WrapperCreated(indexed address,address)
+          handler: handleNewCRVFarmerWrapper
+      file: ./src/curve.ts
+  - kind: ethereum/contract
+    name: CurveRegistry
+    network: mainnet
+    source:
+      address: "0xF437d2f7A42DeCeCD5eE3Aec2BCc2eBEE8D44bd8"
+      abi: CurveRegistry
+      startBlock: 11439843
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+        - Adapters
+      abis:
+        - name: CurveRegistry
+          file: ./abis/CurveRegistry.json
+        - name: SimpleAdapter
+          file: ./abis/SimpleAdapter.json
+      eventHandlers:
+        - event: AdapterRegistered(address,bool)
+          handler: handleAdapterRegistered
+      file: ./src/curve.ts
