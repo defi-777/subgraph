@@ -1,7 +1,9 @@
-import { Address, Bytes } from "@graphprotocol/graph-ts"
+import { Address, Bytes, BigInt } from "@graphprotocol/graph-ts"
 import { CRVFarmerTokenFactory, WrapperCreated } from "../generated/CRVFarmerTokenFactory/CRVFarmerTokenFactory"
 import { IFarmerToken } from "../generated/CRVFarmerTokenFactory/IFarmerToken"
-import { AdapterRegistered } from "../generated/CurveRegistry/CurveRegistry"
+import { ICurveDeposit } from "../generated/CurveRegistry/ICurveDeposit"
+import { IWrapped777 } from "../generated/CurveRegistry/IWrapped777"
+import { CurveRegistry, AdapterRegistered } from "../generated/CurveRegistry/CurveRegistry"
 import { SimpleAdapter } from "../generated/CurveRegistry/SimpleAdapter"
 import { Adapter, Wrapped777 } from "../generated/schema"
 import { Token } from "./lib/string"
@@ -35,10 +37,40 @@ export function handleNewCRVFarmerWrapper(event: WrapperCreated): void {
   wrapper.save()
 }
 
+function setCurvePoolTokens(wrapper: Wrapped777, wrapperAddress: Address, registryAddress: Address): void {
+  let registry = CurveRegistry.bind(registryAddress)
+  let wrapperContract = IWrapped777.bind(wrapperAddress)
+
+  let lpToken = wrapperContract.token()
+  let depositorAddress = registry.getDepositorAddress(lpToken)
+  let depositor = ICurveDeposit.bind(depositorAddress)
+
+  let underlying = !depositor.try_underlying_coins(BigInt.fromI32(0)).reverted
+
+  let poolTokenAddresses = new Array<Bytes>()
+  let poolTokenNames = new Array<string>()
+  let poolTokenSymbols = new Array<string>()
+  for (let i = 0;; i += 1) {
+    let coinAddressResult = underlying
+      ? depositor.try_underlying_coins(BigInt.fromI32(i))
+      : depositor.try_coins(BigInt.fromI32(i))
+
+    if (coinAddressResult.reverted) {
+      break
+    }
+
+    let token = new Token(coinAddressResult.value)
+    poolTokenAddresses[i] = token.address
+    poolTokenNames[i] = token.name
+    poolTokenSymbols[i] = token.symbol
+  }
+  wrapper.poolTokenAddresses = poolTokenAddresses
+  wrapper.poolTokenNames = poolTokenNames
+  wrapper.poolTokenSymbols = poolTokenSymbols
+}
+
 export function handleAdapterRegistered(event: AdapterRegistered): void {
   let adapterContract = SimpleAdapter.bind(event.params.adapter)
-  event.params.adapter
-  event.params.isExit
 
   let adapter = new Adapter(event.params.adapter.toHex())
 
@@ -49,7 +81,7 @@ export function handleAdapterRegistered(event: AdapterRegistered): void {
   if (!event.params.isExit) {
     let wrapper = new Wrapped777(outputWrapper.toHex())
     wrapper.protocol = 'Curve'
-    // TODO: set PoolToken values
+    setCurvePoolTokens(wrapper, outputWrapper, event.address)
     wrapper.save()
   }
 
