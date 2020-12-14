@@ -58,7 +58,7 @@ dataSources:
     source:
       address: "0x8CD1a9Be80cB1827458AF6bB9ca5B0dAAAE36C1f"
       abi: IAdapterFactory
-      startBlock: 11405509
+      startBlock: 11403007
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

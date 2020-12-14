@@ -1,6 +1,6 @@
 import { Address } from "@graphprotocol/graph-ts"
 import { CompoundAdapter, MappingSet } from "../generated/CompoundAdapter/CompoundAdapter"
-import { Adapter } from "../generated/schema"
+import { Adapter, Wrapped777 } from "../generated/schema"
 
 let ZERO = Address.fromString('0x0000000000000000000000000000000000000000')
 let COMPOUND_ETH = Address.fromString('0x0000000000000000000000000000000000000001')
@@ -15,6 +15,12 @@ function getAdapter(address: Address, protocol: String): Adapter {
   return adapter!
 }
 
+function setProtocol(wrapperAddress: Address, protocol: String): void {
+  let wrapper = new Wrapped777(wrapperAddress.toHex())
+  wrapper.protocol = protocol
+  wrapper.save()
+}
+
 export function handleCompoundMappingSet(event: MappingSet): void {
   let adapter = getAdapter(event.address, 'Compound')
 
@@ -24,6 +30,7 @@ export function handleCompoundMappingSet(event: MappingSet): void {
     supportedWrappers.push(event.params.input.toHex())
   }
   supportedWrappers.push(event.params.output.toHex())
+  setProtocol(event.params.output, 'Compound')
 
   adapter.supportedWrappers = supportedWrappers
   adapter.save()
@@ -38,6 +45,7 @@ export function handleYVaultMappingSet(event: MappingSet): void {
     supportedWrappers.push(event.params.input.toHex())
   }
   supportedWrappers.push(event.params.output.toHex())
+  setProtocol(event.params.output, 'yEarn')
 
   adapter.supportedWrappers = supportedWrappers
   adapter.save()
