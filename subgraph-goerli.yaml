@@ -1,0 +1,132 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: WrapperFactory
+    network: goerli
+    source:
+      address: "0x436608C0f7FC4cb11E4458DeA9Dd7B8e98C87767"
+      abi: WrapperFactory
+      startBlock: 3939333
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+      abis:
+        - name: WrapperFactory
+          file: ./abis/WrapperFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: WrapperCreated(address)
+          handler: handleWrapperCreated
+      file: ./src/wrapperFactory.ts
+  - kind: ethereum/contract
+    name: FarmerTokenFactory
+    network: goerli
+    source:
+      address: "0x66Df44f2c596B435aB1628297c5cC32B65D30fc0"
+      abi: FarmerTokenFactory
+      startBlock: 3939333
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+      abis:
+        - name: FarmerTokenFactory
+          file: ./abis/FarmerTokenFactory.json
+        - name: IFarmerToken
+          file: ./abis/IFarmerToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: WrapperCreated(indexed address,address)
+          handler: handleWrapperCreated
+      file: ./src/FarmerTokenFactory.ts
+  - kind: ethereum/contract
+    name: UniswapAdapterFactory
+    network: goerli
+    source:
+      address: "0x8CD1a9Be80cB1827458AF6bB9ca5B0dAAAE36C1f"
+      abi: IAdapterFactory
+      startBlock: 3939333
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+        - Adapters
+      abis:
+        - name: IAdapterFactory
+          file: ./abis/IAdapterFactory.json
+        - name: IUniswapV2Pair
+          file: ./abis/IUniswapV2Pair.json
+        - name: IWrapped777
+          file: ./abis/IWrapped777.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: AdapterCreated(address)
+          handler: handleAdapterCreated
+      file: ./src/uniswap.ts
+  - kind: ethereum/contract
+    name: UniswapPoolAdapterFactory
+    network: goerli
+    source:
+      address: "0xFF5EDd692Ba2E2EDF96321De28f6802529c9b527"
+      abi: IAdapterFactory
+      startBlock: 3939333
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Wrapped777
+        - Adapters
+      abis:
+        - name: IAdapterFactory
+          file: ./abis/IAdapterFactory.json
+        - name: IUniswapV2Pair
+          file: ./abis/IUniswapV2Pair.json
+        - name: IWrapped777
+          file: ./abis/IWrapped777.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20bytes32
+          file: ./abis/ERC20bytes32.json
+      eventHandlers:
+        - event: AdapterCreated(address)
+          handler: handlePoolAdapterCreated
+      file: ./src/uniswap.ts
+  - kind: ethereum/contract
+    name: CompoundAdapter
+    network: goerli
+    source:
+      address: "0x4BD509159Dd731808E5CfEa53849e1ff43bC3745"
+      abi: CompoundAdapter
+      startBlock: 3939333
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Adapters
+      abis:
+        - name: CompoundAdapter
+          file: ./abis/CompoundAdapter.json
+      eventHandlers:
+        - event: MappingSet(address,address)
+          handler: handleCompoundMappingSet
+      file: ./src/singletonAdapters.ts
